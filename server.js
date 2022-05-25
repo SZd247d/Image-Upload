@@ -1,11 +1,20 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const path = require("path");
+
+dotenv.config({ path: "./config.env" });
 
 const app = express();
 
 app.use(fileUpload());
 app.use(cors());
+
+if ((process.env.NODE_ENV = "development")) {
+  app.use(morgan("dev"));
+}
 
 app.post("/upload", (req, res) => {
   if (req.files === null) {
@@ -26,6 +35,16 @@ app.post("/upload", (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log("Example app listening on port : " + 5000);
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log("Example app listening on port : " + PORT);
 });

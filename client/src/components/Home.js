@@ -1,13 +1,16 @@
 import React from "react";
 import { FaReact } from "react-icons/fa";
 import { useState } from "react";
-import axiosInstance from "./utils/axios";
+import axiosInstance from "../utils/axios";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
   const [selectedFile, setSelectedFile] = useState({});
   const [progress, setProgress] = useState(0);
   const [fileData, setFileData] = useState({});
+
+  let navigate = useNavigate();
 
   console.log(selectedFile);
   if (progress === 100) {
@@ -38,6 +41,15 @@ function Home() {
     } catch (error) {
       console.log(error);
     }
+
+    // function showLargeImagePage() {
+    //   navigate({
+    //     pathname: `/large-image/?fileName=${fileData.fileName}&filePath=${fileData.filePath}`,
+    //     // state: {
+    //     //   fileData,
+    //     // },
+    //   });
+    // }
 
     return (
       <div className=" bg-slate-900 min-h-screen overflow-hidden text-slate-100">
@@ -83,14 +95,19 @@ function Home() {
 
         {selectedFile && (
           <div onClick={showLargeImagePage} className="m-10">
-            <div className="flex flex-col mx-auto  mt-16  text-base w-full  sm:w-2/3 md:w-1/2  items-center justify-center   rounded-lg border border-gray-700 cursor-pointer text-gray-400 ">
-              <h1 className="mt-2">{fileData.fileName}</h1>
-              <img
-                className="object-fit rounded-b-lg mt-4"
-                src={fileData.filePath}
-                alt=""
-              />
-            </div>
+            {/* <Link to={`/large-image/${fileData.fileName}`}> */}
+            <Link
+              to={`/large-image/?fileName=${fileData.fileName}&filePath=${fileData.filePath}`}
+            >
+              <div className="flex flex-col mx-auto  mt-16  text-base w-full  sm:w-2/3 md:w-1/2  items-center justify-center   rounded-lg border border-gray-700 cursor-pointer text-gray-400 ">
+                <h1 className="mt-2">{fileData.fileName}</h1>
+                <img
+                  className="object-fit rounded-b-lg mt-4"
+                  src={fileData.filePath}
+                  alt=""
+                />
+              </div>
+            </Link>
           </div>
         )}
       </div>
